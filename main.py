@@ -12,10 +12,14 @@ class Car:
         self.color = color
         self.canvas = canvas
         self.ypos = ypos
+        self.tire1 = canvas.create_rectangle(161, ypos+4, 189, ypos +9, fill="black")
+        self.tire2 = canvas.create_rectangle(161, ypos + length - 9, 189, ypos + length - 4, fill="black")
         self.rectangle = canvas.create_rectangle(165, ypos, 185, ypos+length, fill=color)
 
     def move(self):
         self.canvas.move(self.rectangle, 0, self.speed*10)
+        self.canvas.move(self.tire1, 0, self.speed * 10)
+        self.canvas.move(self.tire2, 0, self.speed * 10)
         self.ypos = self.ypos + self.speed*10
 
     def __str__(self):
@@ -29,10 +33,14 @@ class Car2:
         self.color = color
         self.canvas = canvas
         self.ypos = ypos
+        self.tire1 = canvas.create_rectangle(411, ypos-length+4, 439, ypos-length +9, fill="black")
+        self.tire2 = canvas.create_rectangle(411, ypos - 9, 439, ypos - 4, fill="black")
         self.rectangle = canvas.create_rectangle(415, ypos-length, 435, ypos, fill=color)
 
     def move(self):
         self.canvas.move(self.rectangle, 0, -self.speed*10)
+        self.canvas.move(self.tire1, 0, -self.speed * 10)
+        self.canvas.move(self.tire2, 0, -self.speed * 10)
         self.ypos = self.ypos - self.speed*10
 
     def __str__(self):
@@ -46,7 +54,7 @@ if __name__ == '__main__':
     height = root.winfo_screenheight()
 
     # canvas is a white piece of paper on which you can draw
-    canvas = Canvas(root, width=width, height=height, bg="black")
+    canvas = Canvas(root, width=width, height=height, bg="grey")
     canvas.pack()
 
     # draw the green parks
@@ -58,10 +66,10 @@ if __name__ == '__main__':
     spawn = -11
     cars2 = []
     spawn2 = -11
-    for i in range(3000):
+    for i in range(10000):
         if spawn < i-25:
             if randint(0, 9) == 1:
-                cars.append(Car(canvas, randint(30, 60), randint(2, 8)/10, -100, random.choice(["blue", "green", "red", "yellow", "black", "white", "purple", "pink"])))
+                cars.append(Car(canvas, randint(30, 60), randint(1, 10)/10, -100, random.choice(["blue", "green", "red", "yellow", "black", "white", "purple", "pink"])))
                 spawn = i
 
         for car_index, car in enumerate(cars):
@@ -71,10 +79,12 @@ if __name__ == '__main__':
                     car.move()
             else:
                 car.move()
+            if car.ypos > 1300:
+                cars.remove(car)
 
         if spawn2 < i-10:
-            if randint(0, 9) == 1:
-                cars2.append(Car2(canvas, randint(30, 60), randint(2, 11)/10, 1300, random.choice(["blue", "green", "red", "yellow", "black", "white", "purple", "pink"])))
+            if randint(0, 14) == 1:
+                cars2.append(Car2(canvas, randint(30, 60), randint(1, 15)/10, 1300, random.choice(["blue", "green", "red", "yellow", "black", "white", "purple", "pink"])))
                 spawn2 = i
 
         for car_index2, car2 in enumerate(cars2):
@@ -84,20 +94,11 @@ if __name__ == '__main__':
                     car2.move()
             else:
                 car2.move()
-
-
-
-        # remove cars that drove out of the scene
-        #if (car.pos_x < 0 or car.pos_x > width or car.pos_y < 0 or car.pos_y > height):
-                #cars.remove(car)
-
-
+            if car2.ypos < -100:
+                cars2.remove(car2)
 
         canvas.update()
         time.sleep(0.01)
-
-
-
 
     root.mainloop()
     print("finished")
